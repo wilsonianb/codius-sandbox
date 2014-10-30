@@ -270,7 +270,11 @@ void Sandbox::spawn(char **argv, std::map<std::string, std::string>& envp)
   priv->pid = fork();
 
   char buf[1024];
-  getcwd (buf, sizeof (buf));
+  char *cwd;
+  cwd = getcwd (buf, sizeof (buf));
+  if (cwd==NULL) {
+    error (EXIT_FAILURE, errno, "Could not get current working directory");
+  }
   priv->cwd = buf;
 
   if (priv->pid) {
